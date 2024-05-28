@@ -2,6 +2,9 @@
 
 sudo apt-get update
 
+# Installation de Python 3 et pip
+sudo apt-get install -y python3
+
 # Installation des prérequis
 sudo apt-get install -y rsyslog nftables
 
