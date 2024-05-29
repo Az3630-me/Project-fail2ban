@@ -1,1 +1,50 @@
+import sys
+import time
+import json
+from collections import defaultdict
+from fail_to_ban.log_parser import process_log_file
+from fail_to_ban.scenario import detect_brute_force, ban_ips, get_banned_ips, print_table, load_banned_ips, save_banned_ips
 
+BANNED_IPS_FILE = 'banned_ips.json'
+
+def print_help():
+    print("""
+Usage: python3 main.py [OPTIONS]
+
+Options:
+  -h, --help         : Affiche l'aide avec des informations sur les options disponibles.
+  -d, --ban-duration : l'utilisateur peut choisir la durée du bannissement de l'IP voulu (ex : -d 3600)
+  -s, --status       : Cette option affiche le statut des IP bannis (durée du bannissement, temps restant du bannissement)
+""")
+
+def main():
+    logfile_path = '/var/log/auth.log'
+    ban_duration = 3600
+
+    load_banned_ips(BANNED_IPS_FILE)
+
+    if len(sys.argv) > 1:
+        if sys.argv[1] in ('-h', '--help'):
+            print_help()
+            return
+        elif sys.argv[1] in ('-d', '--ban-duration'):
+            ban_duration = int(sys.argv[2])
+        elif sys.argv[1] in ('-s', '--status'):
+            banned_ips = get_banned_ips()
+            print_table(banned_ips)
+            return
+        else:
+            logfile_path = sys.argv[1]
+
+    try:
+        while True:
+            failed_attempts = process_log_file(logfile_path)
+            malicious_ips, ports, source_ports = detect_brute_force(failed_attempts)
+            ban_ips(malicious_ips, ports, source_ports, ban_duration)
+            save_banned_ips(BANNED_IPS_FILE)
+            time.sleep(5)  
+    except KeyboardInterrupt:
+        print("\nProgramme arrêté.")
+
+if __name__ == "__main__":
+    main()
