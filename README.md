@@ -2,7 +2,8 @@
 
 Fail2Ban est un script Python conçu pour surveiller les tentatives de connexion SSH et bannir les adresses IP malveillantes après 3 tentatives échouées. Ce projet utilise nftables pour implémenter le bannissement des IP et rsyslog pour la gestion des logs.
 
-Prérequis
+Prérequis :
+
 Python 3.x
 nftables installé et configuré sur le système
 rsyslog configuré pour la gestion des logs SSH
