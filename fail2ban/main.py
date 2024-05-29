@@ -5,11 +5,11 @@ from collections import defaultdict
 from fail2ban.log_parser import process_log_file
 from fail2ban.scenario import detect_brute_force, ban_ips, get_banned_ips, print_table, load_banned_ips, save_banned_ips
 
-BANNED_IPS_FILE = 'banned_ips.json'
+BANNED_IPS_FILE = 'banned_ips.json' # Nom du fichier servant à stocker les IP bannies
 
 def print_help():
     print("""
-Usage: python3 main.py [OPTIONS]
+Utilisation: python3 main.py [OPTIONS]
 
 Options:
   -h, --help         : Affiche l'aide avec des informations sur les options disponibles.
@@ -18,8 +18,8 @@ Options:
 """)
 
 def main():
-    logfile_path = '/var/log/auth.log'
-    ban_duration = 3600
+    logfile_path = '/var/log/auth.log' # Chemin des logs SSH
+    ban_duration = 3600 # Durée par défaut du bannissement
 
     load_banned_ips(BANNED_IPS_FILE)
 
@@ -30,8 +30,8 @@ def main():
         elif sys.argv[1] in ('-d', '--ban-duration'):
             ban_duration = int(sys.argv[2])
         elif sys.argv[1] in ('-s', '--status'):
-            banned_ips = get_banned_ips()
-            print_table(banned_ips)
+            banned_ips = get_banned_ips()  # Récupération des IP bannies
+            print_table(banned_ips) # Affichage du tableau des IP bannies
             return
         else:
             logfile_path = sys.argv[1]
