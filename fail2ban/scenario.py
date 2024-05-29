@@ -6,8 +6,8 @@ import json
 
 # Configurations
 attack_time_window = timedelta(minutes=5)  # Fenêtre de temps pour détecter les attaques
-max_attempts = 3 # Nombre maximum de tentatives avant de considérer une IP comme malveillante
-banned_ips = [] # Liste des IP bannies
+max_attempts = 3  # Nombre maximum de tentatives avant de considérer une IP comme malveillante
+banned_ips = []  # Liste des IP bannies
 
 # Fonction permettant de configurer nftables
 def configure_nftables():
@@ -17,12 +17,12 @@ def configure_nftables():
     except subprocess.CalledProcessError as e:
         if "File exists" not in str(e):
             print(f"Erreur de configuration nftables: {e}")
-            
+
 # Fonction permettant de détecter les attaques par brute force
 def detect_brute_force(failed_attempts):
     attempts_by_ip = defaultdict(list)  # Dictionnaire pour stocker les tentatives par IP
     ports = defaultdict(list)  # Dictionnaire pour stocker les ports par IP
-    source_ports = defaultdict(list) # Dictionnaire pour stocker les ports source par IP
+    source_ports = defaultdict(list)  # Dictionnaire pour stocker les ports source par IP
 
     for date, user, ip, source_port in failed_attempts:
         attempts_by_ip[ip].append((date, source_port))
@@ -39,7 +39,7 @@ def detect_brute_force(failed_attempts):
                 break
 
     return malicious_ips, ports, source_ports
-    
+
 # Fonction pour bannir les IP malveillantes
 def ban_ips(malicious_ips, ports, source_ports, ban_duration):
     for ip in malicious_ips:
@@ -50,16 +50,15 @@ def ban_ips(malicious_ips, ports, source_ports, ban_duration):
 
 # Fonction pour appliquer le ban sur une IP
 def ban_ip(ip, port, source_port, ban_start_time, ban_end_time):
-    print(f"3 tentatives de connexion SSH détecté")
-    print(f"Adresse IP à bannir: {ip}")
+    print(f"Banning IP: {ip}, Source Port: {source_port}, Port: {port}, Date: {ban_start_time}")
     try:
         configure_nftables()
         subprocess.run(['sudo', 'nft', 'add', 'rule', 'inet', 'filter', 'input', 'ip', 'saddr', ip, 'counter', 'drop'], check=True)
-        print(f"[statut] IP {ip} bloquée avec succès.")
+        print(f"IP {ip} bloquée avec succès.")
         banned_ips.append({'IP': ip, 'Source Port': source_port, 'Port': port, 'Date': ban_start_time, 'End Time': ban_end_time, 'Time Left': (ban_end_time - datetime.now()).total_seconds()})
         print_table(banned_ips)
     except subprocess.CalledProcessError as e:
-        print(f"[statut] Erreur lors du bannissement de l'adresse IP {ip}: {e}")
+        print(f"Erreur lors du bannissement de l'IP {ip}: {e}")
 
 # Fonction pour obtenir les IP bannies
 def get_banned_ips():
@@ -69,15 +68,24 @@ def get_banned_ips():
         ban['Time Left'] = time_left
     return banned_ips
 
-# Affichage du compte rendu
+# Affichage du tableau principal des IP bannies
 def print_table(data):
-    print("+-----------------+---------------+------+---------------------+---------------------+--------------+")
-    print("| Adresse IP      | Port source   | Port | Date                | Fin du ban          | Temps restant |")
-    print("+-----------------+---------------+------+---------------------+---------------------+--------------+")
+    print("+-----------------+---------------+------+---------------------+")
+    print("| Adresse IP      | Port source   | Port | Date                |")
+    print("+-----------------+---------------+------+---------------------+")
+    for entry in data:
+        print(f"| {entry['IP']:15} | {entry['Source Port']:13} | {entry['Port']:4} | {entry['Date']} |")
+    print("+-----------------+---------------+------+---------------------+")
+
+# Affichage du tableau des détails des IP bannies
+def print_detailed_table(data):
+    print("+-----------------+---------------------+---------------------+--------------+")
+    print("| Adresse IP      | Fin du ban          | Temps restant       | IP source    |")
+    print("+-----------------+---------------------+---------------------+--------------+")
     for entry in data:
         time_left = entry['Time Left']
-        print(f"| {entry['IP']:15} | {entry['Source Port']:13} | {entry['Port']:4} | {entry['Date']} | {entry['End Time']} | {int(time_left)}s |")
-    print("+-----------------+---------------+------+---------------------+---------------------+--------------+")
+        print(f"| {entry['IP']:15} | {entry['End Time']} | {int(time_left)}s           | {entry['Source Port']}       |")
+    print("+-----------------+---------------------+---------------------+--------------+")
 
 # Fonction pour charger les IP bannies depuis un fichier
 def load_banned_ips(filename):
