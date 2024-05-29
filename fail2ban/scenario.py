@@ -70,12 +70,12 @@ def get_banned_ips():
 
 # Affichage du tableau principal des IP bannies
 def print_table(data):
-    print("+-----------------+---------------+------+---------------------+")
+    print("+-----------------+---------------+------+----------------------------+")
     print("| Adresse IP      | Port source   | Port | Date                |")
-    print("+-----------------+---------------+------+---------------------+")
+    print("+-----------------+---------------+------+----------------------------+")
     for entry in data:
         print(f"| {entry['IP']:15} | {entry['Source Port']:13} | {entry['Port']:4} | {entry['Date']} |")
-    print("+-----------------+---------------+------+---------------------+")
+    print("+-----------------+---------------+------+----------------------------+")
 
 # Affichage du tableau des détails des IP bannies
 def print_detailed_table(data):
