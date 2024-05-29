@@ -79,12 +79,12 @@ def print_table(data):
 
 # Affichage du tableau des détails des IP bannies
 def print_detailed_table(data):
-    print("+-----------------+---------------------+---------------------+--------------+")
-    print("| Adresse IP      | Fin du ban          | Temps restant       | IP source    |")
-    print("+-----------------+---------------------+---------------------+--------------+")
+    print("+-----------------+---------------------+---------------------+")
+    print("| Adresse IP      | Fin du ban          | Temps restant       |")
+    print("+-----------------+---------------------+---------------------+")
     for entry in data:
         time_left = entry['Time Left']
-        print(f"| {entry['IP']:15} | {entry['End Time']} | {int(time_left)}s           | {entry['Source Port']}       |")
+        print(f"| {entry['IP']:15} | {entry['End Time']} | {int(time_left)}s           |")
     print("+-----------------+---------------------+---------------------+--------------+")
 
 # Fonction pour charger les IP bannies depuis un fichier
