@@ -1,19 +1,36 @@
 # Project-fail2ban
-Script d'analyse de bruteforce (mini-fail2ban)
 
-- Le script analyse les logs d'authentification et scrute les lignes correspondant aux motifs prédéfinis 
-concernant les erreurs de login SSH en s'appuyant sur des expressions rationnelles.
+Fail2Ban est un script Python conçu pour surveiller les tentatives de connexion SSH et bannir les adresses IP malveillantes après 3 tentatives échouées. Ce projet utilise nftables pour implémenter le bannissement des IP et rsyslog pour la gestion des logs.
 
-- En cas d'erreurs répétées, il bannit l'IP ayant envoyé les requêtes pendant une durée configurable avec nftables
+Prérequis
+Python 3.x
+nftables installé et configuré sur le système
+rsyslog configuré pour la gestion des logs SSH
 
+Installation
+Cloner le dépôt :
+sudo git clone https://github.com/Az3630-me/Project-fail2ban.git
+cd Project-fail2ban
 
-Critères de notation : 
-1. Un fichier README au format texte qui doit décrire quels sont les pré-requis et comment les scripts s'installent
-2. les scripts doivent proposer une aide en ligne documentant les paramètres qu'ils acceptent, grâce à l'option -h
-3. les scripts doivent gérer les cas d'erreur et se terminer sans "crasher". Par exemple en cas de :
-- dépendance manquante
-- entrée utilisateur invalide
-- erreur de connexion réseau...
+Installer les dépendances Python :
 
-4. les scripts (notamment ceux SUID root) doivent vérifier que l'utilisateur ne peut pas effectuer une escalade de privilège en passant des paramètres corrompues ou malformés
-5. les scripts devrnt être exécutables sans erreur sur une Debian 12 
+sudo sh install.sh
+Assurez-vous que nftables et rsyslog sont correctement configurés et fonctionnent sur votre système.
+
+Utilisation
+Le script Fail2Ban peut être exécuté avec différentes options pour définir la durée du bannissement et afficher le statut des IP bannies.
+Tout les bannissements effectués sont répertoriés dans un fichier json présent dans le dossier fail2ban
+
+Options disponibles :
+
+-h, --help : Affiche l'aide et les options disponibles.
+-d, --ban-duration : Définit la durée du bannissement en secondes (ex : -d 3600).
+-s, --status : Affiche le statut des IP bannies.
+
+Exemples :
+
+Démarrer le script avec une durée de bannissement de 60 secondes :
+python3 main.py -d 60
+
+Afficher le statut des IP bannies :
+python3 main.py -s
