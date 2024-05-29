@@ -1,11 +1,12 @@
 import sys
 import time
+import os
 import json
 from collections import defaultdict
 from fail2ban.log_parser import process_log_file
 from fail2ban.scenario import detect_brute_force, ban_ips, get_banned_ips, print_table, print_detailed_table, load_banned_ips, save_banned_ips
 
-BANNED_IPS_FILE = '../banned_ips.json'  # Chemin relatif vers le fichier des IP bannies
+BANNED_IPS_FILE = os.path.join(os.path.dirname(__file__), '..', 'banned_ips.json')
 
 def print_help():
     print("""
