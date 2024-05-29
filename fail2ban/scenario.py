@@ -103,4 +103,3 @@ def load_banned_ips(filename):
 def save_banned_ips(filename):
     with open(filename, 'w') as file:
         json.dump(banned_ips, file, default=str)
-``
