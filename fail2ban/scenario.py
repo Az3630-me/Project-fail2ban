@@ -5,31 +5,33 @@ import subprocess
 import json
 
 # Configurations
-attack_time_window = timedelta(minutes=5)
-max_attempts = 3
-banned_ips = []
+attack_time_window = timedelta(minutes=5)  # Fenêtre de temps pour détecter les attaques
+max_attempts = 3 # Nombre maximum de tentatives avant de considérer une IP comme malveillante
+banned_ips = [] # Liste des IP bannies
 
+# Fonction permettant de configurer nftables
 def configure_nftables():
     try:
         subprocess.run(['sudo', 'nft', 'add', 'table', 'inet', 'filter'], check=True)
         subprocess.run(['sudo', 'nft', 'add', 'chain', 'inet', 'filter', 'input', '{', 'type', 'filter', 'hook', 'input', 'priority', '0', ';', '}'], check=True)
     except subprocess.CalledProcessError as e:
         if "File exists" not in str(e):
-            print(f"Error configuring nftables: {e}")
-
+            print(f"Erreur de configuration nftables: {e}")
+            
+# Fonction permettant de détecter les attaques par brute force
 def detect_brute_force(failed_attempts):
-    attempts_by_ip = defaultdict(list)
-    ports = defaultdict(list)
-    source_ports = defaultdict(list)
+    attempts_by_ip = defaultdict(list)  # Dictionnaire pour stocker les tentatives par IP
+    ports = defaultdict(list)  # Dictionnaire pour stocker les ports par IP
+    source_ports = defaultdict(list) # Dictionnaire pour stocker les ports source par IP
 
     for date, user, ip, source_port in failed_attempts:
         attempts_by_ip[ip].append((date, source_port))
-        ports[ip] = 22 
-        source_ports[ip] = source_port 
+        ports[ip] = 22  # Port SSH par défaut
+        source_ports[ip] = source_port  # Port source
 
     malicious_ips = set()
     for ip, attempts in attempts_by_ip.items():
-        attempts.sort()
+        attempts.sort()  # Trie des tentatives par date
         for i in range(len(attempts)):
             window_attempts = [attempt for attempt in attempts if attempt[0] - attempts[i][0] <= attack_time_window]
             if len(window_attempts) >= max_attempts:
@@ -37,7 +39,8 @@ def detect_brute_force(failed_attempts):
                 break
 
     return malicious_ips, ports, source_ports
-
+    
+# Fonction pour bannir les IP malveillantes
 def ban_ips(malicious_ips, ports, source_ports, ban_duration):
     for ip in malicious_ips:
         if not any(ban['IP'] == ip for ban in banned_ips):
@@ -45,6 +48,7 @@ def ban_ips(malicious_ips, ports, source_ports, ban_duration):
             ban_end_time = ban_start_time + timedelta(seconds=ban_duration)
             ban_ip(ip, ports[ip], source_ports[ip], ban_start_time, ban_end_time)
 
+# Fonction pour appliquer le ban sur une IP
 def ban_ip(ip, port, source_port, ban_start_time, ban_end_time):
     print(f"Banning IP: {ip}, Source Port: {source_port}, Port: {port}, Date: {ban_start_time}")
     try:
@@ -56,12 +60,15 @@ def ban_ip(ip, port, source_port, ban_start_time, ban_end_time):
     except subprocess.CalledProcessError as e:
         print(f"Error banning IP {ip}: {e}")
 
+# Fonction pour obtenir les IP bannies
 def get_banned_ips():
     current_time = datetime.now()
     for ban in banned_ips:
         time_left = (ban['End Time'] - current_time).total_seconds()
         ban['Time Left'] = time_left
     return banned_ips
+
+# Affichage du compte rendu
 def print_table(data):
     print("+-----------------+---------------+------+---------------------+---------------------+--------------+")
     print("| Adresse IP      | Port source   | Port | Date                | Fin du ban          | Temps restant |")
@@ -71,6 +78,7 @@ def print_table(data):
         print(f"| {entry['IP']:15} | {entry['Source Port']:13} | {entry['Port']:4} | {entry['Date']} | {entry['End Time']} | {int(time_left)}s |")
     print("+-----------------+---------------+------+---------------------+---------------------+--------------+")
 
+# Fonction pour charger les IP bannies depuis un fichier
 def load_banned_ips(filename):
     global banned_ips
     try:
@@ -82,6 +90,7 @@ def load_banned_ips(filename):
     except FileNotFoundError:
         banned_ips = []
 
+# Fonction pour sauvegarder les IP bannies dans un fichier
 def save_banned_ips(filename):
     with open(filename, 'w') as file:
         json.dump(banned_ips, file, default=str)
