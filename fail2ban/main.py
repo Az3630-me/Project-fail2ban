@@ -31,7 +31,6 @@ def main():
             ban_duration = int(sys.argv[2])
         elif sys.argv[1] in ('-s', '--status'):
             banned_ips = get_banned_ips()  # Récupération des IP bannies
-            print_table(banned_ips)  # Affichage du tableau principal des IP bannies
             print_detailed_table(banned_ips)  # Affichage du tableau détaillé des IP bannies
             return
         else:
