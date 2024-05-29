@@ -85,7 +85,7 @@ def print_detailed_table(data):
     for entry in data:
         time_left = entry['Time Left']
         print(f"| {entry['IP']:15} | {entry['End Time']} | {int(time_left)}s           |")
-    print("+-----------------+---------------------+---------------------+--------------+")
+    print("+-----------------+---------------------+---------------------+")
 
 # Fonction pour charger les IP bannies depuis un fichier
 def load_banned_ips(filename):
