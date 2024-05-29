@@ -39,4 +39,12 @@ def main():
     try:
         while True:
             failed_attempts = process_log_file(logfile_path)  # Analyse du fichier journal pour obtenir les tentatives de connexion échouées
-            malicious_ips, ports, source_ports = 
+            malicious_ips, ports, source_ports = detect_brute_force(failed_attempts)  # Détection des attaques par force brute
+            ban_ips(malicious_ips, ports, source_ports, ban_duration)  # Bannissement des IP malveillantes
+            save_banned_ips(BANNED_IPS_FILE)  # Sauvegarde des IP bannies dans le fichier
+            time.sleep(5)  # Attente de 5 secondes avant de recommencer
+    except KeyboardInterrupt:
+        print("\nProgramme arrêté.")
+
+if __name__ == "__main__":
+    main()
