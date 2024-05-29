@@ -3,10 +3,13 @@ from collections import defaultdict
 import os
 import subprocess
 import json
+import sys
+import time
 
 # Configurations
 attack_time_window = timedelta(minutes=5)  # Fenêtre de temps pour détecter les attaques
 max_attempts = 3  # Nombre maximum de tentatives avant de considérer une IP comme malveillante
+BANNED_IPS_FILE = 'banned_ips.json'  # Chemin relatif vers le fichier des IP bannies
 banned_ips = []  # Liste des IP bannies
 
 # Fonction permettant de configurer nftables
@@ -71,7 +74,7 @@ def get_banned_ips():
 # Affichage du tableau principal des IP bannies
 def print_table(data):
     print("+-----------------+---------------+------+----------------------------+")
-    print("| Adresse IP      | Port source   | Port | Date                |")
+    print("| Adresse IP      | Port source   | Port | Date                       |")
     print("+-----------------+---------------+------+----------------------------+")
     for entry in data:
         print(f"| {entry['IP']:15} | {entry['Source Port']:13} | {entry['Port']:4} | {entry['Date']} |")
@@ -79,13 +82,13 @@ def print_table(data):
 
 # Affichage du tableau des détails des IP bannies
 def print_detailed_table(data):
-    print("+-----------------+---------------------+---------------------------+")
+    print("+-----------------+---------------------+---------------------+")
     print("| Adresse IP      | Fin du ban          | Temps restant       |")
-    print("+-----------------+---------------------+---------------------------+")
+    print("+-----------------+---------------------+---------------------+")
     for entry in data:
         time_left = entry['Time Left']
         print(f"| {entry['IP']:15} | {entry['End Time']} | {int(time_left)}s           |")
-    print("+-----------------+---------------------+---------------------------+")
+    print("+-----------------+---------------------+---------------------+")
 
 # Fonction pour charger les IP bannies depuis un fichier
 def load_banned_ips(filename):
