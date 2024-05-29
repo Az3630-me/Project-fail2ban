@@ -2,8 +2,8 @@ import sys
 import time
 import json
 from collections import defaultdict
-from fail_to_ban.log_parser import process_log_file
-from fail_to_ban.scenario import detect_brute_force, ban_ips, get_banned_ips, print_table, load_banned_ips, save_banned_ips
+from fail2ban.log_parser import process_log_file
+from fail2ban.scenario import detect_brute_force, ban_ips, get_banned_ips, print_table, load_banned_ips, save_banned_ips
 
 BANNED_IPS_FILE = 'banned_ips.json'
 
