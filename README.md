@@ -37,14 +37,10 @@ Options disponibles :
 
 -d, --ban-duration : Définit la durée du bannissement en secondes (ex : -d 3600).
 
--s, --status : Affiche le statut des IP bannies.
-
 Exemples :
 
 Démarrer le script avec une durée de bannissement de 60 secondes :
 
-python3 main.py -d 60
+cd Project-fail2ban/fail2ban/ 
 
-Afficher le statut des IP bannies :
-
-python3 main.py -s
+sudo python3 PYTHONPATH=.. main.py -d 60
