@@ -13,19 +13,19 @@ rsyslog configuré pour la gestion des logs SSH
 Installation
 
 Cloner le dépôt :
-
+```
 sudo git clone https://github.com/Az3630-me/Project-fail2ban.git
 
 cd Project-fail2ban
-
+```
 Installer les dépendances Python :
-
+```
 sudo sh install.sh
-
+```
 Assurez-vous que nftables et rsyslog sont correctement configurés et fonctionnent sur votre système.
-
+```
 sudo python3 -m fail2ban.main
-
+```
 Utilisation
 
 Le script Fail2Ban peut être exécuté avec différentes options pour définir la durée du bannissement et afficher le statut des IP bannies.
@@ -42,7 +42,8 @@ Options disponibles :
 Exemples :
 
 Démarrer le script avec une durée de bannissement de 60 secondes :
-
+```
 cd Project-fail2ban/fail2ban/ 
 
 sudo PYTHONPATH=.. python3 main.py -d 60
+```
