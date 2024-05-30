@@ -35,6 +35,8 @@ Options disponibles :
 
 -h, --help : Affiche l'aide et les options disponibles.
 
+-s, --statut : Affiche la durée du banissement 
+
 -d, --ban-duration : Définit la durée du bannissement en secondes (ex : -d 3600).
 
 Exemples :
@@ -43,4 +45,4 @@ Démarrer le script avec une durée de bannissement de 60 secondes :
 
 cd Project-fail2ban/fail2ban/ 
 
-sudo python3 PYTHONPATH=.. main.py -d 60
+sudo PYTHONPATH=.. python3 main.py -d 60
