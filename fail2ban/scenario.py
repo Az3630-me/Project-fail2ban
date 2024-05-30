@@ -53,16 +53,17 @@ def ban_ips(malicious_ips, ports, source_ports, ban_duration):
 
 # Fonction pour appliquer le ban sur une IP
 def ban_ip(ip, port, source_port, ban_start_time, ban_end_time):
-    print(f"Banning IP: {ip}, Source Port: {source_port}, Port: {port}, Date: {ban_start_time}")
+    print(f"3 tentatives de connexions SSH échoué detecté")
+    print(f"Adresse IP à bannir: {ip}")
     try:
         configure_nftables()
         subprocess.run(['sudo', 'nft', 'add', 'rule', 'inet', 'filter', 'input', 'ip', 'saddr', ip, 'counter', 'drop'], check=True)
-        print(f"IP {ip} bloquée avec succès.")
+        print(f"[statut] Adresse IP {ip} bloquée avec succès.")
         banned_ips.append({'IP': ip, 'Source Port': source_port, 'Port': port, 'Date': ban_start_time, 'End Time': ban_end_time, 'Time Left': (ban_end_time - datetime.now()).total_seconds()})
         print_table(banned_ips)
         print_detailed_table(banned_ips)
     except subprocess.CalledProcessError as e:
-        print(f"Erreur lors du bannissement de l'IP {ip}: {e}")
+        print(f"[statut] Erreur lors du bannissement de l'IP {ip}: {e}")
 
 # Fonction pour obtenir les IP bannies
 def get_banned_ips():
