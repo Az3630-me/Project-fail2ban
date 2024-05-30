@@ -29,7 +29,7 @@ sudo python3 -m fail2ban.main
 Utilisation
 
 Le script Fail2Ban peut être exécuté avec différentes options pour définir la durée du bannissement et afficher le statut des IP bannies.
-Tout les bannissements effectués sont répertoriés dans un fichier json présent dans le dossier fail2ban
+Tous les bannissements effectués sont répertoriés dans un fichier json présent dans le dossier fail2ban
 
 Options disponibles :
 
@@ -37,7 +37,7 @@ Options disponibles :
 
 -s, --statut : Affiche la durée du banissement 
 
--d, --ban-duration : Définit la durée du bannissement en secondes (ex : -d 3600).
+-d, --ban-duration : Défini la durée du bannissement en secondes (ex : -d 3600).
 
 Exemples :
 
