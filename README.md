@@ -25,6 +25,7 @@ Installer les dépendances Python :
 sudo sh install.sh
 ```
 Assurez-vous que nftables et rsyslog sont correctement configurés et fonctionnent sur votre système.
+Commande à lancer pour démarrer le programme 
 ```
 sudo python3 -m fail2ban.main
 ```
