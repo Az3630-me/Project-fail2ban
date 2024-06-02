@@ -49,3 +49,16 @@ cd Project-fail2ban/fail2ban/
 
 sudo PYTHONPATH=.. python3 main.py -d 60
 ```
+Pour l'option -s 
+```
+sudo PYTHONPATH=.. python3 main.py -s
+
+```
+## Amelioration et débannissement:
+
+La partie de débanissement de l'adresse ip n'étant pas fonctionnel et causant des problèmes sur le reste du code une commande existe pour débannir ces adresses ip
+en vidant toutes les règles de la chaîne input dans la table filter :
+```
+sudo nft flush chain inet filter input
+```
+
