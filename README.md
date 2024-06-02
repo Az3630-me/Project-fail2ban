@@ -41,7 +41,7 @@ Options disponibles :
 
 ## Exemples :
 
-Démarrer le script avec une durée de bannissement de 60 secondes :
+Démarrer le script avec une durée de bannissement de 60 secondes. Pour cela il est nécessaire d'ouvrir un autre terminal :
 ```
 cd Project-fail2ban/fail2ban/ 
 
