@@ -10,6 +10,8 @@ nftables installé et configuré sur le système
 
 rsyslog configuré pour la gestion des logs SSH
 
+Forcement Openssh doit être présent sur la machine
+
 ## Installation
 
 Cloner le dépôt :
